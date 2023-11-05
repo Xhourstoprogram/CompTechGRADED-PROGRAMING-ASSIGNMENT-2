@@ -9,8 +9,8 @@ class TreeNode:
         self.left = left
         self.right = right
 
-def error():
-    sys.stderr.write("Error\n")
+def error(msg):
+    sys.stderr.write(f"Error: {msg}\n")
     sys.exit(1)
 
 def match(expected_token):
@@ -18,7 +18,7 @@ def match(expected_token):
     if token == expected_token:
         token = sys.stdin.read(1)
     else:
-        error()
+        error(f"Expected '{expected_token}' but found '{token}'")
 
 def expr():
     global token
@@ -54,7 +54,7 @@ def factor():
             token = sys.stdin.read(1)
         return TreeNode(str(temp))
     else:
-        error()
+        error(f"Unexpected token '{token}'")
 
 def evaluate_tree(tree):
     if tree.value == '+':
@@ -81,6 +81,8 @@ def main():
     print("\t the valid operations are +, - and *")
     print("Enter the calculation string, e.g. '34+6*56'")
     token = sys.stdin.read(1)
+    if token == '\n':
+        error("Empty input")
     tree = expr()
     if token == '\n':
         print("Parse Tree:")
@@ -88,7 +90,7 @@ def main():
         result = evaluate_tree(tree)
         print("Result =", result)
     else:
-        error()
+        error(f"Unexpected token '{token}'")
 
 if __name__ == "__main__":
     main()
